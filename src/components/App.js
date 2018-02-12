@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
 import { Route, withRouter } from 'react-router-dom';
+
+import NotificationResource from '../resources/NotificationResource';
+
 import LoginContainer from './LoginContainer';
 import ChatContainer from './ChatContainer';
 import UserContainer from './UserContainer';
@@ -10,9 +13,12 @@ class App extends Component {
   state = { user: null, messages: [], messagesLoaded: false };
 
   componentDidMount() {
+    this.notifications = new NotificationResource(firebase.messaging(), firebase.database());
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
         this.setState({ user });
+        //this.listenforMessages();
+        this.notifications.changeUser(user);
       } else {
         this.props.history.push('/login');
       }
